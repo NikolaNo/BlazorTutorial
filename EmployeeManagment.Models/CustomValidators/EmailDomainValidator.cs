@@ -8,19 +8,22 @@ namespace EmployeeManagment.Models.CustomValidators
     public class EmailDomainValidator : ValidationAttribute
     {
         public string AllowedDomain { get; set; }
-    
+
         protected override ValidationResult IsValid(object value, ValidationContext validationcontext)
         {
-            string[] strings = value.ToString().Split('@');
-        if (strings.Length > 1 && strings[1].ToUpper() == AllowedDomain.ToUpper())
+            if (value != null)
             {
-                return null;
-            
+                string[] strings = value.ToString().Split('@');
+                if (strings.Length > 1 && strings[1].ToUpper() == AllowedDomain.ToUpper())
+                {
+                    return null;
+
+                }
+
+                return new ValidationResult(ErrorMessage, new[] { validationcontext.MemberName });
+
             }
-
-            return new ValidationResult(ErrorMessage, new[] { validationcontext.MemberName });
-
-
+            return null;
         }
 
     }

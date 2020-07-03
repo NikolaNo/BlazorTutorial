@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeManagment.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace EmployeeManagment.Web.Models
+namespace EmployeeManagement.Web.Models
 {
     public class EmployeeProfile : Profile
     {
@@ -13,7 +9,7 @@ namespace EmployeeManagment.Web.Models
         {
             CreateMap<Employee, EditEmployeeModel>()
                 .ForMember(dest => dest.ConfirmEmail,
-                opt => opt.MapFrom(src => src.Email));
+                           opt => opt.MapFrom(src => src.Email));
             CreateMap<EditEmployeeModel, Employee>();
         }
     }

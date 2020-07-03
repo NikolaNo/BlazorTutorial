@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EmployeeManagement.Web.Models;
 using EmployeeManagment.Web.Models;
 using EmployeeManagment.Web.Services;
 using Microsoft.AspNetCore.Builder;

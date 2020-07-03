@@ -7,73 +7,76 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmployeeManagment.Web.Pages
+namespace EmployeeManagement.Web.Pages
 {
     public class EditEmployeeBase : ComponentBase
     {
         [Inject]
         public IEmployeeService EmployeeService { get; set; }
 
-        public Employee Employee { get; set; } = new Employee();
+        private Employee Employee { get; set; } = new Employee();
 
-        public EditEmployeeModel EditEmployeeModel { get; set; } = new EditEmployeeModel();
+        public string PageHeaderText { get; set; }
+        public EditEmployeeModel EditEmployeeModel { get; set; } =
+            new EditEmployeeModel();
 
         [Inject]
         public IDepartmentService DepartmentService { get; set; }
 
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
-
-        public List<Department> Departments { get; set; } = new List<Department>();
-
-        public string DepartmentId { get; set; }
+        public List<Department> Departments { get; set; } =
+            new List<Department>();
 
         [Parameter]
         public string Id { get; set; }
 
+        [Inject]
         public IMapper Mapper { get; set; }
+
+        [Inject]
+        public NavigationManager NavigationManager { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
-            
-            Employee = await EmployeeService.GetEmployee(int.Parse(Id));
+            int.TryParse(Id, out int employeeId);
+
+            if (employeeId != 0)
+            {
+                PageHeaderText = "Edit Employee";
+                Employee = await EmployeeService.GetEmployee(int.Parse(Id));
+            }
+            else
+            {
+                PageHeaderText = "Create Employee";
+                Employee = new Employee
+                {
+                    Departmentid = 1,
+                    DateOfBrith = DateTime.Now,
+                    PhotoPath = "images/nophoto.jpg"
+                };
+            }
+
             Departments = (await DepartmentService.GetDepartments()).ToList();
-
-            //Mapper.Map(Employee, EditEmployeeModel);
-
-            EditEmployeeModel.Email = Employee.Email;
-            EditEmployeeModel.DateOfBrith = Employee.DateOfBrith;
-            EditEmployeeModel.Department = Employee.Department;
-            EditEmployeeModel.Departmentid = Employee.Departmentid;
-            EditEmployeeModel.EmployeeId = Employee.EmployeeId;
-            EditEmployeeModel.FirstName = Employee.FirstName;
-            EditEmployeeModel.Gender = Employee.Gender;
-            EditEmployeeModel.LastName = Employee.LastName;
-            EditEmployeeModel.PhotoPath = Employee.PhotoPath;
-            EditEmployeeModel.ConfirmEmail = Employee.Email;
-
+            Mapper.Map(Employee, EditEmployeeModel);
         }
+
         protected async Task HandleValidSubmit()
         {
+            Mapper.Map(EditEmployeeModel, Employee);
 
-            //Mapper.Map(EditEmployeeModel, Employee);
-            Employee.Email = EditEmployeeModel.Email;
-            Employee.DateOfBrith = EditEmployeeModel.DateOfBrith;
-            Employee.Department = EditEmployeeModel.Department;            
-            Employee.EmployeeId = EditEmployeeModel.EmployeeId;
-            Employee.FirstName = EditEmployeeModel.FirstName;
-            Employee.Gender = EditEmployeeModel.Gender;
-            Employee.LastName = EditEmployeeModel.LastName;
-            Employee.PhotoPath = EditEmployeeModel.PhotoPath;
-            
-            var result = await EmployeeService.UpdateEmployee(Employee);
+            Employee result = null;
 
+            if (Employee.EmployeeId != 0)
+            {
+                result = await EmployeeService.UpdateEmployee(Employee);
+            }
+            else
+            {
+                result = await EmployeeService.CreateEmployee(Employee);
+            }
             if (result != null)
             {
                 NavigationManager.NavigateTo("/");
             }
-
         }
-
     }
 }

@@ -75,7 +75,7 @@ namespace EmployeeManagment.Api.Controller
         [HttpPost]
         public async Task<ActionResult<Employee>> CreateEmployee(Employee employee)
         {
-            var emp = employeeRepository.GetEmployeeByEmail(employee.Email);
+            var emp = await employeeRepository.GetEmployeeByEmail(employee.Email);
 
             if (emp != null)
             {
