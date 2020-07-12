@@ -15,6 +15,10 @@ namespace EmployeeManagment.Web.Pages
 
         public bool ShowFooter { get; set; } = true;
         public IEnumerable<Employee> Employees { get; set; }
+        protected async Task EmployeeDeleted()
+        {
+            Employees = (await EmployeeService.GetEmployees()).ToList();
+        }
 
         protected override async Task OnInitializedAsync()
         {

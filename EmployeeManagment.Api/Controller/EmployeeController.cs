@@ -122,7 +122,7 @@ namespace EmployeeManagment.Api.Controller
                 return StatusCode(StatusCodes.Status500InternalServerError, "Employee not found");
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult<Employee>> DeleteEmployee(int id)
         {
             try
@@ -131,18 +131,16 @@ namespace EmployeeManagment.Api.Controller
 
                 if (employeeToDelete == null)
                 {
-                    return BadRequest();
+                    return NotFound($"Employee with Id = {id} not found");
                 }
 
                 return await employeeRepository.DeleteEmployee(id);
-
             }
             catch (Exception)
             {
-
-                return StatusCode(StatusCodes.Status500InternalServerError, "Employee not found");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error deleting data");
             }
-        
         }
 
     }

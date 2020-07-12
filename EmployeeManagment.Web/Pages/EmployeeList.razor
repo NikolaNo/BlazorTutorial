@@ -10,10 +10,12 @@
 }
 else
 {
-    <div class="card-deck">
-        @foreach (var employee in Employees)
-        {
-            <DisplayEmployee Employee="employee" ShowFooter="ShowFooter" OnEmployeeSelection="EmployeeSelectionChanged"></DisplayEmployee>
-        }
-    </div>
+<div class="card-deck">
+    @foreach (var employee in Employees)
+    {
+        <DisplayEmployee Employee="employee" ShowFooter="ShowFooter"
+                         OnEmployeeSelection="EmployeeSelectionChanged"
+                         OnEmployeeDeleted="EmployeeDeleted"></DisplayEmployee>
+    }
+</div>
 }
